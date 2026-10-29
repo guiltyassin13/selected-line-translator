@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>选译 · 侧栏翻译</title><link rel="stylesheet" href="sidepanel.css"></head>
+<body>
+<header><span class="mark">译</span><div><h1>选译</h1><p>选中一段，读懂一段。</p></div><button id="settings" title="打开 API 设置">设置 ↗</button></header>
+<main>
+<p id="hint">在 PDF 中选中文字，右键选择“翻译选中内容”。</p>
+<section id="content" hidden>
+<div class="label">原文</div><p id="source"></p>
+<div class="label">译文 <span id="status" role="status"></span></div><p id="result" aria-busy="false"></p>
+<p id="error" role="alert" hidden></p>
+<div class="actions"><button id="copy" disabled>复制译文</button><button id="retry">重新翻译</button><button id="stop" disabled>停止</button></div>
+<p id="timings"></p>
+</section>
+</main><footer>仅发送你主动选中的文字 · PDF 保留在原阅读器</footer>
+<script type="module" src="sidepanel.js"></script>
+</body></html>

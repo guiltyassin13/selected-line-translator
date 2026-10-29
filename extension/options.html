@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>选译 · 设置</title>
+  <link rel="icon" href="icons/32.png">
+  <link rel="stylesheet" href="options.css">
+  <script type="module" src="options.js"></script>
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <a class="brand" href="#top" aria-label="选译设置首页"><span class="brand-mark">译</span><span>选译<small>SELECTED LINE</small></span></a>
+      <div class="side-label">你的阅读，保持连贯。</div>
+      <nav aria-label="设置导航">
+        <a class="active" href="#connection"><span>01</span> 模型连接 <b>↗</b></a>
+        <a href="#preferences"><span>02</span> 翻译偏好</a>
+        <a href="#shortcut"><span>03</span> 快捷操作</a>
+      </nav>
+      <div class="side-bottom"><span class="dot"></span> 本地配置 · 直连你的 API<br><small>Selected Line / v1.5.1</small></div>
+    </aside>
+    <main id="top">
+      <header class="intro"><div class="eyebrow">LESS FRICTION, MORE READING</div><h1>读到哪里，译到哪里<span>。</span></h1><p>选中一句话，按下快捷键。让理解跟上阅读的速度。</p></header>
+      <section class="preview" aria-label="翻译操作示例">
+        <div class="preview-copy"><span class="mini-label">阅读时，只需一步</span><p>Stay <mark>curious about the world.</mark></p><div class="preview-keys"><kbd>Alt</kbd><span>+</span><kbd>Shift</kbd><span>+</span><kbd>Y</kbd><span class="or">或右键 → 翻译选中内容</span></div></div>
+        <div class="preview-result"><div><span class="mini-logo">译</span><strong>选译</strong><span>简体中文</span></div><p>对世界保持好奇。</p><small>在选区旁，直接看到译文。</small></div>
+      </section>
+      <form id="settings-form">
+        <section id="connection" class="section">
+          <div class="section-heading"><div><span class="section-number">01 / CONNECTION</span><h2>连接你的模型</h2></div><span id="saved-state" class="pill">尚未配置</span></div>
+          <p class="section-description">支持 OpenAI 兼容接口。填写地址、密钥和模型，即可开始。</p>
+          <label for="endpoint">API 地址</label>
+          <input id="endpoint" name="endpoint" type="url" placeholder="https://api.example.com/v1" required spellcheck="false" autocomplete="off" aria-describedby="endpoint-help endpoint-preview">
+          <p class="hint" id="endpoint-help">可填写基础地址，或完整的 /chat/completions 请求地址。</p>
+          <div class="endpoint-preview"><span>最终请求</span><code id="endpoint-preview">填写地址后自动生成</code></div>
+          <div id="http-note" class="hint caution" hidden>此地址使用 HTTP，密钥和文本会以明文传输。请仅用于可信网络。</div>
+          <div class="field-row">
+            <div class="field"><label for="api-key">API Key <span class="optional">本地无鉴权服务可留空</span></label><div class="secret-field"><input id="api-key" name="apiKey" type="password" placeholder="输入你的 API Key" autocomplete="off" spellcheck="false" maxlength="4096"><button id="toggle-key" type="button" class="reveal" aria-label="显示 API Key" aria-pressed="false">显示</button></div></div>
+            <div class="field"><label for="model">模型名称</label><input id="model" name="model" type="text" placeholder="例如 gpt-4.1-mini" required maxlength="200" spellcheck="false" autocomplete="off"></div>
+          </div>
+          <p class="privacy"><span aria-hidden="true">◇</span> 密钥只保存在此浏览器的扩展本地存储中，网页脚本无法读取。</p>
+        </section>
+        <section id="preferences" class="section">
+          <div class="section-heading"><div><span class="section-number">02 / PREFERENCES</span><h2>按你的习惯翻译</h2></div></div>
+          <div class="preference-row"><div><label for="target-language">目标语言</label><p class="hint">自动识别原文语言，只返回译文。</p></div><input id="target-language" name="targetLanguage" list="languages" value="简体中文" required maxlength="80" autocomplete="off"><datalist id="languages"><option value="简体中文"><option value="繁體中文"><option value="English"><option value="日本語"><option value="한국어"><option value="Français"><option value="Deutsch"><option value="Español"></datalist></div>
+          <div class="preference-row"><div><label for="stream">流式显示</label><p class="hint">收到一点，显示一点。接口不支持时可关闭。</p></div><label class="switch"><input id="stream" type="checkbox" checked><span aria-hidden="true"></span></label></div>
+          <div class="preference-row"><div><label for="draggable">浮窗可拖动</label><p class="hint">开启后，拖动浮窗顶部标题栏即可移动位置。</p></div><label class="switch"><input id="draggable" type="checkbox"><span aria-hidden="true"></span></label></div>
+          <div class="preference-row"><div><label for="close-on-outside-click">点击其他区域自动关闭</label><p class="hint">翻译完成后，点击浮窗外或切换页面、窗口时关闭。翻译中不自动关闭。</p></div><label class="switch"><input id="close-on-outside-click" type="checkbox"><span aria-hidden="true"></span></label></div>
+          <p class="hint">两个开关仅作用于网页浮窗，默认关闭，保存后从下一次翻译开始生效。PDF 侧栏的位置与关闭由浏览器控制。</p>
+        </section>
+        <div class="save-bar"><p>保存时，仅请求访问你填写的 API 域名。</p><div><button id="test" type="button" class="button secondary">保存并测试</button><button id="save" type="submit" class="button primary">保存配置 <span>↗</span></button><button id="cancel-test" type="button" class="button secondary" hidden>停止测试</button></div></div>
+        <p id="feedback" class="feedback" role="status" aria-live="polite" hidden></p>
+        <section id="test-result" class="test-result" aria-label="连接测试结果" hidden><div class="test-top"><strong id="test-status">连接测试</strong><span id="test-model"></span></div><p id="test-output"></p><div id="test-timings" class="hint"></div></section>
+      </form>
+      <section id="shortcut" class="section shortcut-section"><div class="section-heading"><div><span class="section-number">03 / SHORTCUT</span><h2>网页快捷键</h2></div><button id="open-shortcuts" class="text-button" type="button">修改快捷键 ↗</button></div><div class="shortcut-line"><span>网页浮窗翻译</span><div id="current-shortcut" class="shortcut-keys" aria-live="polite">正在读取…</div></div><p id="shortcut-hint" class="hint">网页按 Alt+Shift+Y 打开浮窗；显示未绑定时，请在浏览器中手动绑定。PDF 只使用右键翻译，离开来源标签页后侧栏自动收起。</p></section>
+      <section class="section"><h2>在原生 PDF 中使用</h2><p class="hint">保留 Edge、Chrome 自带阅读器。选中文字后直接点击右键“翻译选中内容”，自动识别 PDF 并打开侧栏。PDF 本版使用右键翻译。扫描件无可选文字时不会调用接口。</p><p id="panel-diagnostic" class="hint" role="status">最近一次侧栏触发：本次会话尚未收到。</p></section>
+      <section class="metrics-section" aria-label="最近一次翻译性能"><div class="metrics-heading"><span class="section-number">LAST TRANSLATION</span><span id="metrics-source">本次浏览器会话</span></div><div class="metrics-grid"><div><span>插件响应</span><strong id="metric-popup">—</strong></div><div><span>接口首字</span><strong id="metric-first">—</strong></div><div><span>完整翻译</span><strong id="metric-total">—</strong></div><div><span>首段渲染</span><strong id="metric-render">—</strong></div></div><p class="hint">接口首字与完成耗时取决于模型和网络；连接测试不测量网页浮窗响应。</p></section>
+      <footer class="page-footer"><span>只翻译你选中的内容。</span><span>轻量 · 按需 · 自己掌控</span></footer>
+    </main>
+  </div>
+</body>
+</html>
+

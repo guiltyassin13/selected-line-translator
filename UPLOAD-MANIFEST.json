@@ -1,0 +1,9 @@
+{
+  "version": "1.5.1",
+  "excluded": [
+    "browser profiles and caches",
+    "local debug logs and user page snapshots",
+    "API credentials and environment files",
+    "historical ZIP archives"
+  ]
+}

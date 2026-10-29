@@ -1,0 +1,55 @@
+{
+  "manifest_version": 3,
+  "name": "选译 · Selected Line",
+  "version": "1.5.1",
+  "description": "选中文字，一键翻译。使用自己的 OpenAI 兼容 API，在选区旁流式显示译文。",
+  "minimum_chrome_version": "141",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "contextMenus",
+    "storage",
+    "sidePanel"
+  ],
+  "optional_host_permissions": [
+    "https://*/*",
+    "http://*/*"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_title": "选译 · API 与快捷键设置",
+    "default_icon": {
+      "16": "icons/16.png",
+      "32": "icons/32.png",
+      "48": "icons/48.png",
+      "128": "icons/128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/16.png",
+    "32": "icons/32.png",
+    "48": "icons/48.png",
+    "128": "icons/128.png"
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+  "commands": {
+    "translate-selection": {
+      "suggested_key": {
+        "default": "Alt+Shift+Y"
+      },
+      "description": "网页浮窗翻译选中文字"
+    }
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'none'; base-uri 'none'"
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  }
+}
