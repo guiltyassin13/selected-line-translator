@@ -36,8 +36,9 @@ async function badge(tabId, message = '') {
   const scope = Number.isInteger(tabId) && tabId >= 0 ? { tabId } : {};
   await Promise.allSettled([
     chrome.action.setBadgeText({ ...scope, text: message ? '!' : '' }),
-    chrome.action.setBadgeBackgroundColor({ ...scope, color: '#a84731' }),
-    chrome.action.setTitle({ ...scope, title: message || '选译 · API 与快捷键设置' })
+    chrome.action.setBadgeBackgroundColor({ ...scope, color: '#c4e8fb' }),
+    chrome.action.setBadgeTextColor?.({ ...scope, color: '#214e70' }),
+    chrome.action.setTitle({ ...scope, title: message || 'opalite翻译 · API 与快捷键设置' })
   ]);
 }
 

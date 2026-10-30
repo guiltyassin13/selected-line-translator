@@ -1,9 +1,9 @@
 {
-  "name": "selected-line-translator",
-  "version": "1.5.1",
+  "name": "opalite-translator",
+  "version": "1.6.0",
   "private": true,
   "type": "module",
-  "description": "Selection translator with native browser PDF side panel support",
+  "description": "opalite 翻译：网页浮窗与原生 PDF 侧栏",
   "scripts": {
     "test": "node --test tests/*.test.mjs",
     "check": "node tools/check.mjs",

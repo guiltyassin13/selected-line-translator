@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "选译 · Selected Line",
-  "version": "1.5.1",
+  "name": "opalite翻译",
+  "version": "1.6.0",
   "description": "选中文字，一键翻译。使用自己的 OpenAI 兼容 API，在选区旁流式显示译文。",
   "minimum_chrome_version": "141",
   "permissions": [
@@ -20,7 +20,7 @@
     "type": "module"
   },
   "action": {
-    "default_title": "选译 · API 与快捷键设置",
+    "default_title": "opalite翻译 · API 与快捷键设置",
     "default_icon": {
       "16": "icons/16.png",
       "32": "icons/32.png",

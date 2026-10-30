@@ -1,11 +1,11 @@
 (() => {
-  const BUILD = '1.5.1';
+  const BUILD = '1.6.0';
   const previous = globalThis.__selectedLineTranslator;
   if (previous?.version === BUILD) return;
   try { previous?.dispose?.(); } catch { /* invalidated old runtime must not block the new build */ }
   // Old extension worlds can leave their Shadow DOM behind after a reload.
   for (const stale of document.querySelectorAll('selected-line-translator')) {
-    if (stale.shadowRoot?.querySelector('.panel[aria-label="选译翻译结果"]')) { stale.hidden = true; stale.remove(); }
+    if (stale.shadowRoot?.querySelector('.panel[aria-label="选译翻译结果"], .panel[aria-label="opalite翻译结果"]')) { stale.hidden = true; stale.remove(); }
   }
   let host, shadow, panel, source, result, status, timings, copyButton, retryButton, port, resizeObserver;
   let current = null, output = '', generation = 0, repositionFrame = 0, firstPaintMeasured = false;
@@ -18,37 +18,39 @@
     :host { color-scheme: light; }
     * { box-sizing: border-box; }
     .panel { width: min(420px, calc(100vw - 48px)); max-height: min(520px, 72dvh); display: flex; flex-direction: column;
-      background: #fcfbf7; color: #192c27; border: 1px solid #d8ded5; border-radius: 15px; overflow: hidden;
-      box-shadow: 0 12px 44px #122b2726, 0 2px 8px #122b2710; font: 14px/1.6 -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif; }
-    .top { display: flex; align-items: center; gap: 9px; padding: 13px 15px; border-bottom: 1px solid #e5e8df; flex-shrink: 0; }
+      background: #f6fbff; color: #223e55; border: 1px solid #bfdced; border-radius: 15px; overflow: hidden;
+      box-shadow: 0 12px 44px #315e8026, 0 2px 8px #315e8010; font: 14px/1.6 -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif; }
+    .top { display: flex; align-items: center; gap: 9px; padding: 13px 15px; border-bottom: 1px solid #cde5f4; flex-shrink: 0; }
     .top.draggable { cursor: grab; user-select: none; touch-action: none; }
     .top.dragging { cursor: grabbing; }
-    .mark { display: grid; place-items: center; width: 27px; height: 27px; border-radius: 7px; background: #205847; color: white; font-size: 16px; font-weight: 650; }
+    .mark { display: grid; place-items: center; width: 27px; height: 27px; border-radius: 7px; background: #c4e8fb; color: #285d80; font-size: 16px; font-weight: 650; }
     .name { font-weight: 650; font-size: 14px; letter-spacing: .03em; }
-    .status { margin-left: auto; font-size: 12px; color: #526a5e; }
-    button { font: inherit; cursor: pointer; border: 1px solid #d8ded5; background: transparent; color: #285641; border-radius: 7px; padding: 5px 10px; }
-    button:hover { background: #edf1e8; }
-    button:focus-visible { outline: 2px solid #287458; outline-offset: 2px; }
+    .status { margin-left: auto; font-size: 12px; color: #526f85; }
+    button { font: inherit; cursor: pointer; border: 1px solid #bfdced; background: transparent; color: #285d80; border-radius: 7px; padding: 5px 10px; }
+    button:hover { background: #e4f3fc; }
+    button:focus-visible { outline: 2px solid #397ca8; outline-offset: 2px; }
     button:disabled { cursor: default; opacity: .45; }
-    .close { border: 0; font-size: 22px; line-height: 1; padding: 3px 5px; color: #66746b; }
+    .close { border: 0; font-size: 22px; line-height: 1; padding: 3px 5px; color: #526f85; }
     .body { display: flex; flex-direction: column; overflow: auto; overscroll-behavior: contain; padding: 16px 18px; min-height: 0; }
-    .source { margin: 0 0 12px; padding-bottom: 12px; border-bottom: 1px dashed #dce1d6; color: #637166; font-size: 12px; line-height: 1.6;
+    .source { margin: 0 0 12px; padding-bottom: 12px; border-bottom: 1px dashed #c9e2f2; color: #526f85; font-size: 12px; line-height: 1.6;
       display: block; flex-shrink: 0; max-height: var(--source-limit, 104px); overflow-y: auto; overflow-x: hidden;
-      scrollbar-width: thin; scrollbar-color: #a7b7a5 #edf1e8; scrollbar-gutter: stable; overscroll-behavior: contain; padding-right: 8px;
+      scrollbar-width: thin; scrollbar-color: #95c6e4 #e4f3fc; scrollbar-gutter: stable; overscroll-behavior: contain; padding-right: 8px;
       overflow-wrap: anywhere; white-space: pre-wrap; }
     .source::-webkit-scrollbar, .result::-webkit-scrollbar { width: 7px; }
-    .source::-webkit-scrollbar-track, .result::-webkit-scrollbar-track { background: #edf1e8; border-radius: 6px; }
-    .source::-webkit-scrollbar-thumb, .result::-webkit-scrollbar-thumb { background: #a7b7a5; border-radius: 6px; }
-    .source:focus-visible, .result:focus-visible { outline: 2px solid #287458; outline-offset: 2px; }
-    .result { margin: 0; color: #203e31; font-size: 16px; line-height: 1.8; white-space: pre-wrap; overflow-wrap: anywhere; user-select: text;
+    .source::-webkit-scrollbar-track, .result::-webkit-scrollbar-track { background: #e4f3fc; border-radius: 6px; }
+    .source::-webkit-scrollbar-thumb, .result::-webkit-scrollbar-thumb { background: #95c6e4; border-radius: 6px; }
+    .source:focus-visible, .result:focus-visible { outline: 2px solid #397ca8; outline-offset: 2px; }
+    .result { margin: 0; color: #24445e; font-size: 16px; line-height: 1.8; white-space: pre-wrap; overflow-wrap: anywhere; user-select: text;
       min-height: var(--result-min, 0px); max-height: var(--result-limit, 280px); overflow-y: auto; overflow-x: hidden;
-      scrollbar-width: thin; scrollbar-color: #a7b7a5 #edf1e8; scrollbar-gutter: stable; overscroll-behavior: contain; padding-right: 5px; }
-    .result.loading { color: #728071; font-size: 14px; }
-    .error { margin: 10px 0 0; color: #a34532; font-size: 13px; white-space: pre-wrap; }
-    .footer { display: flex; flex-direction: column; gap: 10px; border-top: 1px solid #e5e8df; padding: 11px 15px; flex-shrink: 0; }
+      scrollbar-width: thin; scrollbar-color: #95c6e4 #e4f3fc; scrollbar-gutter: stable; overscroll-behavior: contain; padding-right: 5px; }
+    .result.loading { color: #526f85; font-size: 14px; }
+    .error { margin: 10px 0 0; color: #28577b; font-size: 13px; white-space: pre-wrap; }
+    .footer { display: flex; flex-direction: column; gap: 10px; border-top: 1px solid #cde5f4; padding: 11px 15px; flex-shrink: 0; }
     .actions { display: flex; align-items: center; gap: 7px; }
-    .settings { margin-left: auto; border-color: transparent; color: #67776a; }
-    .timings { font-size: 11px; color: #6e7c71; font-variant-numeric: tabular-nums; }
+    .settings { margin-left: auto; border-color: transparent; color: #526f85; }
+    .timings { font-size: 11px; color: #526f85; font-variant-numeric: tabular-nums; }
+    .panel.automatic .footer { gap: 6px; padding: 8px 15px; }
+    .panel.automatic .actions button { font-size: 12px; line-height: 1.4; padding: 3px 8px; }
     [hidden] { display: none !important; }
     @media (prefers-reduced-motion: no-preference) { .loading::after { content: ' ·'; animation: breathe 1.2s ease-in-out infinite; } @keyframes breathe { 50% { opacity: .2; } } }
   `;
@@ -71,7 +73,7 @@
     host.style.cssText = 'all:initial!important;position:fixed!important;z-index:2147483647!important;display:block!important;margin:0!important;padding:0!important;border:0!important;transform:none!important;';
     shadow = host.attachShadow({ mode: 'open' });
     const style = element('style'); style.textContent = styles;
-    panel = element('section', 'panel'); panel.setAttribute('role', 'region'); panel.setAttribute('aria-label', '选译翻译结果');
+    panel = element('section', 'panel'); panel.setAttribute('role', 'region'); panel.setAttribute('aria-label', 'opalite翻译结果');
     const top = element('header', 'top');
     top.addEventListener('pointerdown', beginDrag);
     top.addEventListener('pointermove', moveDrag);
@@ -79,7 +81,7 @@
     top.addEventListener('pointercancel', endDrag);
     top.addEventListener('lostpointercapture', endDrag);
     status = element('span', 'status', '准备翻译'); status.setAttribute('role', 'status');
-    top.append(element('span', 'mark', '译'), element('span', 'name', '选译'), status,
+    top.append(element('span', 'mark', 'o'), element('span', 'name', 'opalite'), status,
       button('×', '关闭翻译（Esc）', close, 'close'));
     const body = element('div', 'body');
     source = element('p', 'source'); result = element('p', 'result');
@@ -150,15 +152,28 @@
     const margin = Math.min(24, innerWidth / 10, innerHeight / 10), gap = 12;
     const width = Math.max(1, innerWidth - margin * 2), height = Math.max(1, innerHeight - margin * 2);
     const clamp = (n, lo, hi) => Math.max(lo, Math.min(n, Math.max(lo, hi)));
-    const preferredWidth = Math.min(420, width), readingCap = Math.min(520, height, innerHeight * .72);
+    const automatic = !manualPosition;
+    panel.classList.toggle('automatic', automatic);
+    const preferredWidth = Math.min(automatic ? 440 : 420, width);
+    const readingCap = Math.min(automatic ? 552 : 520, height, innerHeight * (automatic ? .78 : .72));
     const textLength = current?.text?.length || 0;
     const body = shadow.querySelector('.body');
     const scrollOffsets = [source.scrollTop, result.scrollTop, body.scrollTop];
-    function size(cap) {
+    function size(cap, constrained = false) {
       panel.style.width = preferredWidth + 'px';
-      panel.style.maxHeight = cap + 'px';
-      panel.style.setProperty('--source-limit', Math.min(104, Math.max(40, cap * .2)) + 'px');
       const chromeHeight = shadow.querySelector('.top').offsetHeight + shadow.querySelector('.footer').offsetHeight + 2;
+      if (automatic && !constrained && textLength > 350 && output) {
+        // A small loading card must not freeze a long translation at two lines.
+        // Grow with actual rendered text, up to four readable lines; leave empty
+        // output compact. The source uses at most 18% of the automatic height.
+        const readableResult = Math.min(result.scrollHeight, 116);
+        const base = chromeHeight + 44 + readableResult;
+        cap = Math.min(readingCap, Math.max(cap, Math.min(base / .82, base + 88)));
+      }
+      panel.style.maxHeight = cap + 'px';
+      panel.style.setProperty('--source-limit', automatic
+        ? Math.min(88, Math.max(40, cap * .18)) + 'px'
+        : Math.min(104, Math.max(40, cap * .2)) + 'px');
       const sourceHeight = source.hidden ? 0 : source.getBoundingClientRect().height + 12;
       const resultLimit = Math.max(24, cap - chromeHeight - sourceHeight - 32);
       panel.style.setProperty('--result-limit', resultLimit + 'px');
@@ -204,10 +219,12 @@
         if (chosen) {
           side = chosen.side;
           const cushion = Math.min(48, Math.max(0, (chosen.available - bounds.height) / 2));
-          ceiling = preferred ? Math.min(readingCap, autoPosition.ceiling ?? readingCap)
+          ceiling = preferred ? Math.min(readingCap, Math.max(autoPosition.ceiling ?? readingCap, bounds.height))
             : Math.min(readingCap, chosen.available - (side === 'above' || side === 'below' ? cushion : 0));
           const cap = Math.min(ceiling, chosen.available);
-          if (cap < readingCap) bounds = size(cap);
+          // Respect real whitespace in short viewports; the readability floor
+          // repairs stale loading limits, not the browser's physical space.
+          if (cap < readingCap) bounds = size(cap, true);
           if (side === 'below') { left = alignedLeft; top = box.bottom + gap; }
           if (side === 'above') { left = alignedLeft; top = box.top - gap - bounds.height; }
           if (side === 'right' || side === 'left') {
