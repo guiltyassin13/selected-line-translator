@@ -1,6 +1,6 @@
 {
   "name": "opalite-translator",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "private": true,
   "type": "module",
   "description": "opalite 翻译：网页浮窗与原生 PDF 侧栏",

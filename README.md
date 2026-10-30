@@ -2,11 +2,11 @@
 
 轻量的 Chrome / Edge 划词 AI 翻译扩展。使用自己的 OpenAI 兼容 API，无需后端，无需构建。
 
-**当前版本：v1.6.0 · 需要 Chrome / Edge 141 或更新版本。**
+**当前版本：v1.6.1 · 需要 Chrome / Edge 141 或更新版本。**
 
 ## 名称与主题
 
-产品名 **opalite翻译**，界面简称 **opalite**。设置页、网页浮窗、PDF 侧栏和扩展图标统一为浅天蓝色系，正文保持深蓝。
+产品名 **opalite翻译**，界面简称 **opalite**。设置页、网页浮窗、PDF 侧栏和扩展图标统一为浅天蓝色系，正文保持深蓝。图标为翻开书本的轮廓，内部“译”字保留清晰边距。
 
 ![opalite 浅天蓝浮窗](docs/opalite-popup-preview.png)
 
@@ -23,10 +23,12 @@ PDF 只使用右键；网页快捷键不会读取 PDF 选区。扫描件 OCR、�
 
 ## 安装与更新
 
-1. 下载 [v1.6.0 扩展包](dist/opalite-translator-v1.6.0.zip)，解压到固定目录；或下载整个仓库。
+1. 下载 [v1.6.1 扩展包](dist/opalite-translator-v1.6.1.zip)，解压到固定目录；或下载整个仓库。
 2. Edge 打开 edge://extensions；Chrome 打开 chrome://extensions，开启开发者模式。
 3. 点击“加载解压缩的扩展”，选择直接包含 manifest.json 的目录。使用整个仓库时选择 extension 文件夹。
 4. 更新时覆盖原加载目录的文件，再点击扩展卡片“重新加载”，确认版本号；刷新网页并重新打开 PDF。保持原加载目录可沿用已有配置。
+
+扩展菜单仍显示旧名称时，在 edge://extensions 或 chrome://extensions 中点击原扩展的“重新加载”，确认名称 opalite翻译、版本 1.6.1。刷新网页不能替代重新加载扩展；保持原加载目录可沿用配置。
 
 ## API 配置
 

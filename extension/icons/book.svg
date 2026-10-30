@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" aria-hidden="true" focusable="false">
+  <rect x="2" y="2" width="124" height="124" rx="26" fill="#dff2fd"/>
+  <path d="M64 31C49 21 33 20 17 25V97C34 92 50 95 64 104C78 95 94 92 111 97V25C95 20 79 21 64 31Z" fill="#f7fcff" stroke="#397ca8" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M64 31V37M64 97V104" fill="none" stroke="#397ca8" stroke-width="4" stroke-linecap="round"/>
+  <text x="64" y="79" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="44" font-weight="600" fill="#285d80">译</text>
+</svg>

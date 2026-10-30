@@ -1,5 +1,6 @@
 (() => {
-  const BUILD = '1.6.0';
+  const BUILD = '1.6.1';
+  const BRAND_SVG = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"128\" height=\"128\" viewBox=\"0 0 128 128\" aria-hidden=\"true\" focusable=\"false\">\n  <rect x=\"2\" y=\"2\" width=\"124\" height=\"124\" rx=\"26\" fill=\"#dff2fd\"/>\n  <path d=\"M64 31C49 21 33 20 17 25V97C34 92 50 95 64 104C78 95 94 92 111 97V25C95 20 79 21 64 31Z\" fill=\"#f7fcff\" stroke=\"#397ca8\" stroke-width=\"5.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  <path d=\"M64 31V37M64 97V104\" fill=\"none\" stroke=\"#397ca8\" stroke-width=\"4\" stroke-linecap=\"round\"/>\n  <text x=\"64\" y=\"79\" text-anchor=\"middle\" font-family=\"Microsoft YaHei, Noto Sans CJK SC, sans-serif\" font-size=\"44\" font-weight=\"600\" fill=\"#285d80\">译</text>\n</svg>\n";
   const previous = globalThis.__selectedLineTranslator;
   if (previous?.version === BUILD) return;
   try { previous?.dispose?.(); } catch { /* invalidated old runtime must not block the new build */ }
@@ -23,7 +24,8 @@
     .top { display: flex; align-items: center; gap: 9px; padding: 13px 15px; border-bottom: 1px solid #cde5f4; flex-shrink: 0; }
     .top.draggable { cursor: grab; user-select: none; touch-action: none; }
     .top.dragging { cursor: grabbing; }
-    .mark { display: grid; place-items: center; width: 27px; height: 27px; border-radius: 7px; background: #c4e8fb; color: #285d80; font-size: 16px; font-weight: 650; }
+    .mark { display: grid; place-items: center; width: 27px; height: 27px; border-radius: 7px; background: transparent; color: #285d80; font-size: 16px; font-weight: 650; }
+    .mark svg { display: block; width: 100%; height: 100%; }
     .name { font-weight: 650; font-size: 14px; letter-spacing: .03em; }
     .status { margin-left: auto; font-size: 12px; color: #526f85; }
     button { font: inherit; cursor: pointer; border: 1px solid #bfdced; background: transparent; color: #285d80; border-radius: 7px; padding: 5px 10px; }
@@ -81,7 +83,9 @@
     top.addEventListener('pointercancel', endDrag);
     top.addEventListener('lostpointercapture', endDrag);
     status = element('span', 'status', '准备翻译'); status.setAttribute('role', 'status');
-    top.append(element('span', 'mark', 'o'), element('span', 'name', 'opalite'), status,
+    const mark = element('span', 'mark');
+    mark.append(document.importNode(new DOMParser().parseFromString(BRAND_SVG, 'image/svg+xml').documentElement, true));
+    top.append(mark, element('span', 'name', 'opalite'), status,
       button('×', '关闭翻译（Esc）', close, 'close'));
     const body = element('div', 'body');
     source = element('p', 'source'); result = element('p', 'result');

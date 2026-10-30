@@ -8,7 +8,7 @@ const manifest = JSON.parse(await readFile(join(root, 'extension/manifest.json')
 if (manifest.manifest_version !== 3) throw new Error('Manifest V3 required');
 const contentScript = await readFile(join(root, 'extension/content.js'), 'utf8');
 if (!contentScript.includes(`const BUILD = '${manifest.version}'`)) throw new Error('Content script build must match manifest version');
-const files = [manifest.background.service_worker, manifest.options_ui.page, 'content.js', 'options.js', 'options.css', manifest.side_panel.default_path, 'sidepanel.js', 'sidepanel.css', ...Object.values(manifest.icons)];
+const files = [manifest.background.service_worker, manifest.options_ui.page, 'content.js', 'options.js', 'options.css', manifest.side_panel.default_path, 'sidepanel.js', 'sidepanel.css', 'icons/book.svg', ...Object.values(manifest.icons)];
 for (const file of files) await access(resolve(root, 'extension', file));
 async function checkJS(dir) {
   for (const entry of await readdir(dir, { withFileTypes: true })) {
